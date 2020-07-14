@@ -30,7 +30,8 @@ function CreateProductScreen(props) {
         }
     }
 
-    return <div className="form">
+    return userAuth ?
+    <div className="form">
         <form onSubmit={submitHandler}>
             <ul className="form-container">
                 <li>
@@ -69,12 +70,13 @@ function CreateProductScreen(props) {
                     <button type="submit" className="button primary">Create</button>
                 </li>
                 <li>
-                    <button type="button" onClick={() => props.history.push("/profile")} className="button secondary">Back</button>
+                    <button type="button" onClick={() => props.history.push("/user/profile")} className="button secondary">Back</button>
                 </li>
                 
             </ul>
         </form>
     </div>
+    : <div>404</div>
 }
 export default CreateProductScreen;
 

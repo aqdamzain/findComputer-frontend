@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import Cookie from 'js-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteProduct, userProducts, saveProduct } from '../actions/productActions';
+import { update } from '../actions/userActions';
 
 function ProfileScreen(props) {
 
@@ -18,6 +19,9 @@ function ProfileScreen(props) {
     const productDeleted = useSelector(state => state.deleteProduct);
     const {loading: deleteLoading, products: deletedProduct, error: errorDelete } = productDeleted;
 
+    const userUpdated = useSelector(state => state.userUpdate);
+    const {loading: updateLoading, userInfo: updatedUser, error: errorUpdate } = userUpdated;
+
     const dispatch = useDispatch();
     const userAuth = Cookie.getJSON("userInfo");
 
@@ -31,7 +35,13 @@ function ProfileScreen(props) {
 
     const submitHandler = async (e) => {
         e.preventDefault();
-
+        await dispatch(update(userAuth, {
+            name: nameUser, address, file: profileImage
+        }));
+        if(errorUpdate){
+        }else{
+            setModalVisible(false);
+        }
     }
 
     const deleteHandler = async (product) => {
@@ -39,7 +49,8 @@ function ProfileScreen(props) {
         products.splice(products.indexOf(product), 1);
     }
 
-    return <div className="content-profile">
+    return userAuth ?
+    <div className="content-profile">
         <div className="side-userInfo">
             {!modalVisible && <div>
                 <img src={userAuth.data.profileImg} alt="Avatar"></img>
@@ -61,13 +72,17 @@ function ProfileScreen(props) {
                                 <h2>Update Profile</h2>
                             </li>
                             <li>
+                                { updateLoading && <div>Loading...</div>}
+                                { errorUpdate && <div>{errorUpdate}</div>}
+                            </li>
+                            <li>
                                 <label htmlFor="nameUser">Name</label>
                                 <input type="text" name="nameUser" id="nameUser" onChange={(e) => setNameUser(e.target.value)}>
                                 </input>
                             </li>
                             <li>
                                 <label htmlFor="adress">Adress</label>
-                                <input type="number" name="adress" id="adress" onChange={(e) => setAdress(e.target.value)}>
+                                <input type="text" name="adress" id="adress" onChange={(e) => setAdress(e.target.value)}>
                                 </input>
                             </li>
                             <li>
@@ -93,7 +108,7 @@ function ProfileScreen(props) {
 
             <div className="userProduct-header">
                 <h3>Products</h3>
-                <button onClick={() => props.history.push("/CreateProduct")}>Create Product</button>
+                <button onClick={() => props.history.push("/user/createProduct")}>Create Product</button>
             </div>
             <div className="product-tableList">
                 {
@@ -129,8 +144,8 @@ function ProfileScreen(props) {
                 }
             </div>
         </div>
-
     </div>
+    : <div>404</div>
     
     
     

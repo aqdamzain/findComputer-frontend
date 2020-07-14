@@ -1,4 +1,4 @@
-import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_FAIL, PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS, PRODUCT_DETAILS_FAIL, PRODUCT_DELETE_REQUEST, PRODUCT_DELETE_SUCCESS, PRODUCT_DELETE_FAIL, PRODUCT_USER_REQUEST, PRODUCT_USER_SUCCESS, PRODUCT_USER_FAIL, PRODUCT_SAVE_REQUEST, PRODUCT_SAVE_SUCCESS, PRODUCT_SAVE_FAIL } from "../constants/productConstants";
+import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_FAIL, PRODUCT_DETAILS_REQUEST, PRODUCT_DETAILS_SUCCESS, PRODUCT_DETAILS_FAIL, PRODUCT_DELETE_REQUEST, PRODUCT_DELETE_SUCCESS, PRODUCT_DELETE_FAIL, PRODUCT_USER_REQUEST, PRODUCT_USER_SUCCESS, PRODUCT_USER_FAIL, PRODUCT_SAVE_REQUEST, PRODUCT_SAVE_SUCCESS, PRODUCT_SAVE_FAIL, PRODUCT_BUY_REQUEST, PRODUCT_BUY_SUCCESS, PRODUCT_BUY_FAIL, PRODUCT_HISTORY_REQUEST, PRODUCT_HISTORY_SUCCESS, PRODUCT_HISTORY_FAIL } from "../constants/productConstants";
 
 function productListReducer(state = {products:[]}, action){
     switch (action.type) {
@@ -20,6 +20,32 @@ function productUserReducer(state = {products:[]}, action){
         case PRODUCT_USER_SUCCESS:
             return {loading: false, products: action.payload};
         case PRODUCT_USER_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+function productHistoryReducer(state = {products:[]}, action){
+    switch (action.type) {
+        case PRODUCT_HISTORY_REQUEST:
+            return {loading: true};
+        case PRODUCT_HISTORY_SUCCESS:
+            return {loading: false, products: action.payload};
+        case PRODUCT_HISTORY_FAIL:
+            return { loading: false, error: action.payload };
+        default:
+            return state;
+    }
+}
+
+function productBuyReducer(state = {product:{}}, action){
+    switch (action.type) {
+        case PRODUCT_BUY_REQUEST:
+            return {loading: true};
+        case PRODUCT_BUY_SUCCESS:
+            return {loading: false, product: action.payload};
+        case PRODUCT_BUY_FAIL:
             return { loading: false, error: action.payload };
         default:
             return state;
@@ -65,4 +91,5 @@ function productSaveReducer(state = {product:{}}, action){
     }
 }
 
-export { productListReducer, productDetailsReducer, productDeletesReducer, productUserReducer, productSaveReducer }
+export { productListReducer, productDetailsReducer, productDeletesReducer, 
+    productUserReducer, productSaveReducer, productBuyReducer, productHistoryReducer }

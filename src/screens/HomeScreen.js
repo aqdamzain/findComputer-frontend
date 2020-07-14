@@ -1,20 +1,34 @@
 import React, { useEffect } from 'react';
 import {Link} from 'react-router-dom'
+import Cookie from 'js-cookie';
 import { useSelector, useDispatch } from 'react-redux';
-import { listProducts } from '../actions/productActions';
+import { listProducts, buyProduct } from '../actions/productActions';
 
 function HomeScreen(props) {
 
 const productList = useSelector(state => state.productList);
   const { products, loading, error } = productList;
   const dispatch = useDispatch();
+
+  const userAuth = Cookie.getJSON("userInfo");
+
+  var category = props.match.params.id;
+  if (props.match.params.id) {
+  }else {
+    category = "";
+  }
   useEffect(() => {
-    dispatch(listProducts());
+    dispatch(listProducts(category));
     return () => {
       //
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleBuy = async (product) => {
+      await dispatch(buyProduct(userAuth, product));
+      props.history.push("/");
+  }
 
     return loading ? <div>Loading...</div> :
     error ? <div>{error}</div> :

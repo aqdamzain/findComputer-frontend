@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'
+import Cookie from 'js-cookie';
 import { useSelector, useDispatch } from 'react-redux';
-import { detailsProduct } from '../actions/productActions';
+import { detailsProduct, buyProduct } from '../actions/productActions';
 
 function ProductScreen(props) {
-    const [qty, setQty] = useState(1);
     const productDetails = useSelector(state => state.productDetails);
     const {product, loading, error} = productDetails;
+    const productBuy = useSelector(state => state.userUpdate);
+    const {loading: buyLoading, product: productbuy, error: errorBuy} = productDetails;
     const dispatch = useDispatch();
+
+    const userAuth = Cookie.getJSON("userInfo");
 
     useEffect(() => {
         dispatch(detailsProduct(props.match.params.id));
@@ -17,9 +21,12 @@ function ProductScreen(props) {
         // eslint-disable-next-line
     }, []);
 
-    const handleAddToCart = () => {
-        props.history.push("/cart/" + props.match.params.id + "?qty=" + qty);
+    const handleBuy = () => {
+        dispatch(buyProduct(userAuth, product));
+        props.history.push("/user/buyHistory");
     }
+
+    var temp = product;
 
     return <div>
         <div className="back-to-result">
@@ -30,46 +37,24 @@ function ProductScreen(props) {
             (
             <div className = "details">
                 <div className="details-image">
-                    <img src={product.image} alt="product"></img>
-                </div>
-                <div className="details-info">
                     <ul>
                         <li>
-                            <h4>{product.name}</h4>
+                            <img src={temp.itemImg} alt="product"></img>
                         </li>
                         <li>
-                            {product.rating} Stars ({product.numRevies} Reviews)
-                        </li>
-                        <li>
-                            Price: <b>${product.price}</b>
-                        </li>
-                        <li>
-                            Description:
-                            <div>
-                                {product.description}
-                            </div>
+                            <button type="button" onClick={handleBuy} className="button primary">Proccess to Buy</button>
                         </li>
                     </ul>
                 </div>
-                <div className="details-action">
+                <div className="details-info">
                     <ul>
+                        <li><h4>{temp.name}</h4></li>
+                        <li> {temp.category} </li>
                         <li>
-                            Price: {product.price}
-                        </li>
-                        <li>
-                            Status: {product.countInStock>0? "In Stock" : "Out of Stock"}
-                        </li>
-                        <li>
-                            Qty: <select value={qty} onChange={(e) => {setQty(e.target.value)}}>
-                                {[...Array(product.countInStock).keys()].map( x=>
-                                    <option key={x+1} value={x+1}>{x+1}</option>
-                                    )}
-                            </select> 
-                        </li>
-                        <li>
-                            {product.countInStock>0 && <button onClick={handleAddToCart} className="button primary">Add to Cart</button>
-                            }
-                            
+                            Description:
+                            <div>
+                                {temp.description}
+                            </div>
                         </li>
                     </ul>
                 </div>

@@ -4,12 +4,12 @@ import './App.css';
 import Cookie from 'js-cookie';
 import HomeScreen from './screens/HomeScreen'
 import ProductScreen from './screens/ProductScreen'
-import CartScreen from './screens/CartScreen';
 import SigninScreen from './screens/SigninScreen';
 import { useSelector } from 'react-redux';
 import RegisterScreen from './screens/RegisterScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import CreateProductScreen from './screens/CreateProductScreen';
+import BuyHistoryScreen from './screens/BuyHistoryScreen';
 
 function App() {
   
@@ -44,19 +44,20 @@ function App() {
           <button onClick={openMenu}>
             &#9776;
           </button>
-          <Link to="/" >amazona computer</Link>
+          <a href={`${window.location.origin}/`} >amazona computer</a>
         </div>
         <div className="header-links">
           {
             userInfo ? <a onClick={handleNameClick}>{userInfo.data.name}</a> :
-            <Link to="/signin">Sign In</Link>
+            <Link to="/user/signin">Sign In</Link>
           }
         </div>
       </header>
       {userMenuState && (
             <div className="dropdown">
               <ul>
-                <li><Link to="/profile">Profile</Link></li>
+                <li><Link to="/user/profile">Profile</Link></li>
+                <li><Link to="/user/buyHistory">Buy History</Link></li>
                 <li><a onClick={logOutClick}>Log Out</a></li>
               </ul>
             </div>
@@ -67,23 +68,31 @@ function App() {
         <button className="sidebar-close-button" onClick={closeMenu}>x</button>
         <ul>
           <li>
-            <a href="index.html">Pants</a>
+            <a href={`${window.location.origin}/processor`}>Processor</a>
           </li>
           <li>
-            <a href="index.html">Shirts</a>
+            <a href={`${window.location.origin}/motherboard`}>Motherboard</a>
+          </li>
+          <li>
+            <a href={`${window.location.origin}/ram`}>Ram</a>
+          </li>
+          <li>
+            <a href={`${window.location.origin}/storage`}>Storage</a>
+          </li>
+          <li>
+            <a href={`${window.location.origin}/vga`}>VGA</a>
           </li>
         </ul>
       </aside>
       <main className="main">
         <div className="content">
-          <Route path="/profile" component={ProfileScreen} />
-          <Route path="/CreateProduct" component={CreateProductScreen} />
-          <Route path="/register" component={RegisterScreen} />
-          <Route path="/signin" component={SigninScreen} />
+          <Route path="/user/profile" component={ProfileScreen} />
+          <Route path="/user/buyHistory" component={BuyHistoryScreen} />
+          <Route path="/user/createProduct" component={CreateProductScreen} />
+          <Route path="/user/register" component={RegisterScreen} />
+          <Route path="/user/signin" component={SigninScreen} />
           <Route path="/product/:id" component={ProductScreen} />
-          <Route path="/cart/:id?" component={CartScreen} />
-          <Route path="/" exact={true} component={HomeScreen} />
-          
+          <Route path="/:id?" exact={true} component={HomeScreen} />
         </div>
       </main>
       <footer className="footer">
